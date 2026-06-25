@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="Pagina de aniversario com mensagem direta pelo WhatsApp."
+    >
+    <title>Aniversariante</title>
+    <script>
+      (function () {
+        var base = window.location.protocol === "file:" ? "" : "/";
+        window.APP_ASSET_BASE = base;
+        document.write(
+          '<link rel="preload" href="' +
+            base +
+            'assets/aniversario-hero.png" as="image">'
+        );
+        document.write('<link rel="stylesheet" href="' + base + 'styles.css">');
+      })();
+    </script>
+  </head>
+  <body>
+    <main id="app" class="app-shell" aria-live="polite"></main>
+
+    <script>
+      (function () {
+        var base =
+          window.APP_ASSET_BASE ||
+          (window.location.protocol === "file:" ? "" : "/");
+        document.write('<script src="' + base + 'firebase-config.js"><\/script>');
+        document.write(
+          '<script type="module" src="' + base + 'app.js"><\/script>'
+        );
+      })();
+    </script>
+  </body>
+</html>

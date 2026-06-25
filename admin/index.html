@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <title>Admin | Aniversariantes</title>
+    <link rel="stylesheet" href="/admin/admin.css?v=4">
+  </head>
+  <body>
+    <main class="admin-shell">
+      <section class="admin-header">
+        <div>
+          <p class="eyebrow">Admin</p>
+          <h1>Aniversariantes</h1>
+        </div>
+        <button id="signOutButton" class="ghost-button" type="button" hidden>Sair</button>
+      </section>
+
+      <section id="statusPanel" class="status-panel"></section>
+
+      <section id="loginPanel" class="login-panel" hidden>
+        <form id="loginForm" class="login-form">
+          <h2>Acessar painel</h2>
+          <label>
+            E-mail
+            <input id="loginEmail" type="email" autocomplete="email" required>
+          </label>
+          <label>
+            Senha
+            <input
+              id="loginPassword"
+              type="password"
+              autocomplete="current-password"
+              required
+            >
+          </label>
+          <button class="primary-button" type="submit">Entrar</button>
+        </form>
+      </section>
+
+      <section id="dashboard" class="dashboard" hidden>
+        <aside class="sidebar-panel">
+          <div class="panel-title">
+            <h2>Paginas</h2>
+            <button id="newCelebrantButton" class="icon-text-button" type="button">Nova</button>
+          </div>
+          <div id="celebrantList" class="celebrant-list"></div>
+        </aside>
+
+        <section class="editor-panel">
+          <form id="celebrantForm" class="celebrant-form">
+            <div class="form-toolbar">
+              <div>
+                <p class="eyebrow">Cadastro</p>
+                <h2 id="formTitle">Novo aniversariante</h2>
+              </div>
+              <a id="publicLink" class="ghost-link" href="#" target="_blank" rel="noopener" hidden>
+                Abrir pagina
+              </a>
+            </div>
+
+            <div class="form-grid">
+              <label>
+                Genero
+                <select id="genero" required>
+                  <option value="feminino">Feminino</option>
+                  <option value="masculino">Masculino</option>
+                </select>
+              </label>
+              <label>
+                Slug
+                <input id="slug" type="text" placeholder="maria" required>
+              </label>
+              <label>
+                Nome completo
+                <input id="nome" type="text" required>
+              </label>
+              <label>
+                Apelido
+                <input id="apelido" type="text" required>
+              </label>
+              <label>
+                Idade
+                <input id="idade" type="text" required>
+              </label>
+              <label>
+                Data
+                <input id="data" type="text" placeholder="25 de junho" required>
+              </label>
+              <label>
+                Cidade
+                <input id="cidade" type="text">
+              </label>
+              <label>
+                WhatsApp
+                <input id="whatsapp" type="tel" placeholder="5511999999999" required>
+              </label>
+            </div>
+
+            <label>
+              Foto
+              <input id="foto" type="text" placeholder="assets/aniversario-hero.png" required>
+            </label>
+            <label>
+              Destaque
+              <textarea id="destaque" rows="2" required></textarea>
+            </label>
+            <label>
+              Recado
+              <textarea id="recado" rows="3" required></textarea>
+            </label>
+
+            <div class="form-grid">
+              <label>
+                Mensagem 1
+                <input id="mensagem1" type="text" required>
+              </label>
+              <label>
+                Mensagem 2
+                <input id="mensagem2" type="text">
+              </label>
+              <label>
+                Mensagem 3
+                <input id="mensagem3" type="text">
+              </label>
+            </div>
+
+            <div class="form-grid">
+              <label>
+                Momento 1 titulo
+                <input id="momento1Titulo" type="text" required>
+              </label>
+              <label>
+                Momento 1 texto
+                <input id="momento1Texto" type="text" required>
+              </label>
+              <label>
+                Momento 2 titulo
+                <input id="momento2Titulo" type="text">
+              </label>
+              <label>
+                Momento 2 texto
+                <input id="momento2Texto" type="text">
+              </label>
+              <label>
+                Momento 3 titulo
+                <input id="momento3Titulo" type="text">
+              </label>
+              <label>
+                Momento 3 texto
+                <input id="momento3Texto" type="text">
+              </label>
+            </div>
+
+            <div class="form-grid compact-grid">
+              <label>
+                Cor primaria
+                <input id="temaPrimario" type="text" placeholder="#7b2f6f">
+              </label>
+              <label>
+                Cor secundaria
+                <input id="temaSecundario" type="text" placeholder="#e85d75">
+              </label>
+              <label>
+                Cor destaque
+                <input id="temaDestaque" type="text" placeholder="#f6b73c">
+              </label>
+              <label>
+                Cor texto
+                <input id="temaTexto" type="text" placeholder="#211827">
+              </label>
+            </div>
+
+            <label class="check-row">
+              <input id="ativo" type="checkbox" checked>
+              Pagina ativa
+            </label>
+
+            <div class="form-actions">
+              <button class="primary-button" type="submit">Salvar</button>
+              <p id="formFeedback" role="status"></p>
+            </div>
+          </form>
+
+          <section class="messages-panel">
+            <div class="panel-title">
+              <h2>Mensagens do mural</h2>
+              <button id="refreshMessagesButton" class="icon-text-button" type="button">
+                Atualizar
+              </button>
+            </div>
+            <div id="adminMessages" class="admin-messages"></div>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script src="/firebase-config.js"></script>
+    <script type="module" src="/admin/admin.js?v=4"></script>
+  </body>
+</html>
