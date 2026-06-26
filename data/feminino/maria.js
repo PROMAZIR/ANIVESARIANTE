@@ -8,6 +8,10 @@ window.ANIVERSARIANTE = {
   cidade: "Sao Paulo",
   whatsapp: "5511999999999",
   foto: "assets/aniversario-hero.png",
+  musica: {
+    titulo: "",
+    url: ""
+  },
   destaque: "Hoje e dia de celebrar uma pessoa que ilumina qualquer encontro.",
   recado:
     "Que este novo ciclo chegue com saude, leveza, bons encontros e motivos de sobra para sorrir.",

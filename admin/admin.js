@@ -25,6 +25,7 @@ let services;
 let currentUser;
 let currentCelebrantId = "";
 let cachedCelebrants = [];
+const QUICK_MESSAGE_MAX_LENGTH = 700;
 
 function escapeHtml(value) {
   return String(value || "")
@@ -39,7 +40,23 @@ function setStatus(message) {
   statusPanel.textContent = message || "";
 }
 
-function firebaseErrorMessage(error) {
+function debugEnabled() {
+  return new URLSearchParams(window.location.search).has("debug");
+}
+
+function debugLog(message, error) {
+  if (debugEnabled()) {
+    console.error(message, error);
+  }
+}
+
+function adminPermissionHint(user = currentUser) {
+  const uid = user?.uid || "UID_DO_USUARIO";
+
+  return `UID logado: ${uid}. Crie o documento admins/${uid} no Firestore ou publique as regras atualizadas.`;
+}
+
+function firebaseErrorMessage(error, user = currentUser) {
   const code = error?.code || "";
 
   if (code === "app/timeout" || error?.name === "TimeoutError") {
@@ -47,7 +64,7 @@ function firebaseErrorMessage(error) {
   }
 
   if (code.includes("permission-denied")) {
-    return "Sem permissao no Firestore. Confira se as regras foram publicadas e se existe admins/{UID} para este usuario.";
+    return `Sem permissao no Firestore. ${adminPermissionHint(user)}`;
   }
 
   if (code.includes("unauthenticated")) {
@@ -98,6 +115,8 @@ function emptyFormData() {
     cidade: "",
     whatsapp: "",
     foto: "assets/aniversario-hero.png",
+    musicaUrl: "",
+    musicaTitulo: "",
     destaque: "",
     recado: "",
     ativo: true,
@@ -129,6 +148,8 @@ function fillForm(data) {
     "cidade",
     "whatsapp",
     "foto",
+    "musicaUrl",
+    "musicaTitulo",
     "destaque",
     "recado",
     "mensagem1",
@@ -172,6 +193,8 @@ function getFormData() {
     cidade: field("cidade").value.trim(),
     whatsapp: field("whatsapp").value.replace(/\D/g, ""),
     foto: field("foto").value.trim() || "assets/aniversario-hero.png",
+    musicaUrl: field("musicaUrl").value.trim(),
+    musicaTitulo: field("musicaTitulo").value.trim(),
     destaque: field("destaque").value.trim(),
     recado: field("recado").value.trim(),
     ativo: field("ativo").checked,
@@ -204,6 +227,8 @@ function personToFormData(person) {
     cidade: person.cidade,
     whatsapp: person.whatsapp,
     foto: person.foto,
+    musicaUrl: person.musica?.url || "",
+    musicaTitulo: person.musica?.titulo || "",
     destaque: person.destaque,
     recado: person.recado,
     ativo: person.ativo,
@@ -236,6 +261,16 @@ function validateFormData(data) {
     return "Preencha destaque, recado e pelo menos a primeira mensagem.";
   }
 
+  const longQuickMessage = [
+    ["Mensagem 1", data.mensagem1],
+    ["Mensagem 2", data.mensagem2],
+    ["Mensagem 3", data.mensagem3]
+  ].find(([, message]) => message.length > QUICK_MESSAGE_MAX_LENGTH);
+
+  if (longQuickMessage) {
+    return `${longQuickMessage[0]} pode ter no maximo ${QUICK_MESSAGE_MAX_LENGTH} caracteres.`;
+  }
+
   return "";
 }
 
@@ -251,6 +286,8 @@ function buildFirestoreData(data, createdAt, updatedAt) {
     cidade: data.cidade,
     whatsapp: data.whatsapp,
     foto: data.foto,
+    musicaUrl: data.musicaUrl,
+    musicaTitulo: data.musicaTitulo,
     destaque: data.destaque,
     recado: data.recado,
     ativo: data.ativo,
@@ -395,7 +432,7 @@ async function saveCelebrant(event) {
     await loadMessages(id);
   } catch (error) {
     formFeedback.textContent = firebaseErrorMessage(error);
-    console.error(error);
+    debugLog("Nao foi possivel salvar o aniversariante.", error);
   } finally {
     submitButton.disabled = false;
   }
@@ -413,7 +450,7 @@ async function deleteMessage(messageId) {
     await loadMessages(currentCelebrantId);
   } catch (error) {
     setStatus(firebaseErrorMessage(error));
-    console.error(error);
+    debugLog("Nao foi possivel apagar a mensagem.", error);
   }
 }
 
@@ -466,7 +503,9 @@ async function boot() {
       if (!allowed) {
         loginPanel.hidden = true;
         dashboard.hidden = true;
-        setStatus(`Usuario autenticado, mas sem permissao de admin. UID: ${user.uid}`);
+        setStatus(
+          `Usuario autenticado, mas sem permissao de admin. ${adminPermissionHint(user)}`
+        );
         return;
       }
 
@@ -477,8 +516,8 @@ async function boot() {
       await loadCelebrants();
       await loadMessages("");
     } catch (error) {
-      setStatus(`${firebaseErrorMessage(error)} UID: ${user.uid}`);
-      console.error(error);
+      setStatus(firebaseErrorMessage(error, user));
+      debugLog("Nao foi possivel verificar permissao do admin.", error);
     }
   });
 
@@ -502,7 +541,7 @@ loginForm.addEventListener("submit", async (event) => {
     );
   } catch (error) {
     setStatus(firebaseErrorMessage(error));
-    console.error(error);
+    debugLog("Nao foi possivel entrar no Firebase.", error);
   }
 });
 
@@ -535,5 +574,5 @@ adminMessages.addEventListener("click", async (event) => {
 
 boot().catch((error) => {
   setStatus("Erro ao iniciar o admin. Confira firebase-config.js.");
-  console.error(error);
+  debugLog("Erro ao iniciar o admin.", error);
 });

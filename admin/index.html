@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex">
     <title>Admin | Aniversariantes</title>
-    <link rel="stylesheet" href="/admin/admin.css?v=4">
+    <link rel="stylesheet" href="/admin/admin.css?v=5">
   </head>
   <body>
     <main class="admin-shell">
@@ -102,6 +102,24 @@
               Foto
               <input id="foto" type="text" placeholder="assets/aniversario-hero.png" required>
             </label>
+            <div class="form-grid">
+              <label>
+                Links MP3 ou YouTube
+                <textarea
+                  id="musicaUrl"
+                  rows="4"
+                  placeholder="assets/musica-1.mp3&#10;https://exemplo.com/musica-2.mp3"
+                ></textarea>
+              </label>
+              <label>
+                Titulos das musicas
+                <textarea
+                  id="musicaTitulo"
+                  rows="4"
+                  placeholder="Musica da festa&#10;Outra faixa"
+                ></textarea>
+              </label>
+            </div>
             <label>
               Destaque
               <textarea id="destaque" rows="2" required></textarea>
@@ -114,15 +132,15 @@
             <div class="form-grid">
               <label>
                 Mensagem 1
-                <input id="mensagem1" type="text" required>
+                <textarea id="mensagem1" rows="4" maxlength="700" required></textarea>
               </label>
               <label>
                 Mensagem 2
-                <input id="mensagem2" type="text">
+                <textarea id="mensagem2" rows="4" maxlength="700"></textarea>
               </label>
               <label>
                 Mensagem 3
-                <input id="mensagem3" type="text">
+                <textarea id="mensagem3" rows="4" maxlength="700"></textarea>
               </label>
             </div>
 
@@ -197,6 +215,6 @@
     </main>
 
     <script src="/firebase-config.js"></script>
-    <script type="module" src="/admin/admin.js?v=4"></script>
+    <script type="module" src="/admin/admin.js?v=6"></script>
   </body>
 </html>
